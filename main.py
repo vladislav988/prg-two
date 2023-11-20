@@ -1,3 +1,32 @@
+
+students = []
+lectors = []
+def average_rating_st(list, cours):
+    summ = 0
+    b = 0
+    for i in list:
+        if cours in i["courses_in_progress"]:
+            for j in i["grades"][cours]:
+                b += 1
+                summ += j
+    if b != 0:
+        ar = summ / b
+        print(f"средняя оценка студентов на курсе по {cours}: {ar}")
+    else:
+        print("оценок нет")
+def average_rating_lc(list, cours):
+    summ = 0
+    b = 0
+    for i in list:
+        if cours in i["courses_attached"]:
+            for j in i["grades"][cours]:
+                b += 1
+                summ += j
+    if b != 0:
+        ar = summ / b
+        print(f"средняя оценка лекторов на курсе по {cours}: {ar}")
+    else:
+        print("оценок нет")
 class Student:
     def __init__(self, name, surname, gender):
         self.name = name
@@ -6,10 +35,16 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
+        params = [{"name":self.name, "surname": self.surname,"courses_in_progress": self.courses_in_progress, "grades": self.grades }]
+        global students
+        students += params
     def rate_hw(self, lector, course, grade):
         if course in lector.courses_attached and course in self.courses_in_progress :
             if course in lector.grades:
                 lector.grades[course] += [grade]
+                # for i in lectors:
+                #     if i.name == lector.name and i.surname == lector.surname:
+                #         lectors[i] = lector
             else:
                 lector.grades[course] = [grade]
         else:
@@ -27,7 +62,10 @@ class Student:
             for g in self.grades[i]:
                 a += 1
                 summ += g
-        ac = summ / a
+        if a != 0:
+            ac = summ / a
+        else:
+            ac = "оценок нет"
         return f"""Имя: {self.name}
 Фамилия: {self.surname}
 Средняя оценка за лекции: {ac}
@@ -43,6 +81,7 @@ class Mentor:
         self.surname = surname
 
 
+
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
         if course in student.courses_in_progress:
@@ -50,6 +89,7 @@ class Reviewer(Mentor):
                 student.grades[course] += [grade]
             else:
                 student.grades[course] = [grade]
+
         else:
             return 'Ошибка'
 
@@ -64,6 +104,13 @@ class Lector(Mentor):
         Mentor.__init__(self, name, surname)
         self.grades = {}
         self.courses_attached = []
+        params = [{"name": self.name, "surname": self.surname, "courses_attached": self.courses_attached,
+                  "grades": self.grades}]
+        global lectors
+        lectors += params
+
+
+
 
     def __str__(self):
         a = 0
@@ -120,9 +167,10 @@ rev2.rate_hw(student2, "C#", 7)
 
 
 student1.rate_hw(lector1, 'Python', 8)
-student1.rate_hw(lector1, 'C#', 7)
-student2.rate_hw(lector2, 'Python', 8)
-student2.rate_hw(lector2, 'C#', 9)
+student1.rate_hw(lector1, 'Python', 10)
+student1.rate_hw(lector1, 'C#', 10)
+student2.rate_hw(lector2, 'Python', 9)
+student2.rate_hw(lector2, 'C#', 7)
 
 
 print(student2)
@@ -132,3 +180,9 @@ print(lector1)
 print(lector2)
 print(rev1)
 print(rev2)
+average_rating_st(students, "C#")
+average_rating_st(students, "Python")
+average_rating_lc(lectors, "C#")
+average_rating_lc(lectors, "Python")
+
+# хорошей работы)
