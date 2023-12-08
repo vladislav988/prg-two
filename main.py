@@ -1,6 +1,17 @@
 
 students = []
 lectors = []
+
+
+def comparison(self):
+    a = 0
+    summ = 0
+    for i in self.grades:
+        for g in self.grades[i]:
+            a += 1
+            summ += g
+    s = summ / a
+    return s
 def average_rating_st(list, cours):
     summ = 0
     b = 0
@@ -38,6 +49,14 @@ class Student:
         params = [{"name":self.name, "surname": self.surname,"courses_in_progress": self.courses_in_progress, "grades": self.grades }]
         global students
         students += params
+    def __lt__(self, other):
+        s_gr = comparison(self)
+        v_gr = comparison(other)
+        if s_gr < v_gr:
+            return f"{other.surname} {other.name}"
+        else:
+            return f"{self.surname} {self.name}"
+
     def rate_hw(self, lector, course, grade):
         if course in lector.courses_attached and course in self.courses_in_progress :
             if course in lector.grades:
@@ -108,6 +127,13 @@ class Lector(Mentor):
                   "grades": self.grades}]
         global lectors
         lectors += params
+    def __lt__(self, other):
+        s_gr = comparison(self)
+        v_gr = comparison(other)
+        if s_gr < v_gr:
+            return f"{other.surname} {other.name}"
+        else:
+            return f"{self.surname} {self.name}"
 
 
 
@@ -184,5 +210,7 @@ average_rating_st(students, "C#")
 average_rating_st(students, "Python")
 average_rating_lc(lectors, "C#")
 average_rating_lc(lectors, "Python")
+print(f"средняя оценка больше у: {student1 < student2}")
+print(f"средняя оценка больше у: {lector1 < lector2}")
 
 # хорошей работы)
